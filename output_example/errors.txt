@@ -1,0 +1,2 @@
+days with more than 1% of error requests:
+July 17, 2016 -- 2.32% errors.
