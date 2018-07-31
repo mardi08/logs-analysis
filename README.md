@@ -12,14 +12,12 @@ To get a report of 3 most popular articles:
 ```
 python newsdata/popular_articles.py
 ```
-<br>
-```
+
 To get a report of 3 most popular authors:
 ```
 python newsdata/popular_authors.py
 ```
-<br>
-```
+
 To get a report of days with more than 1 % requests lead to errors:
 ```
 python newsdata/errors.py
