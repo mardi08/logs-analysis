@@ -28,7 +28,8 @@ articles_log_query = "(articles join" \
 # joining authors table with log_articles table
 final_query = "SELECT name, sum(num) as views from authors join "\
     + articles_log_query\
-    + " as log_articles on authors.id = log_articles.author group by authors.id;"
+    + " as log_articles on authors.id = log_articles.author \
+    group by authors.id;"
 
 # Getting all queries
 cur.execute(final_query)
