@@ -14,16 +14,19 @@ cur = db.cursor()
 '''
 Constructing sql queries
 '''
+# query to count rows with error status from log table
 errors_query = "(" \
                + "SELECT time::date, count(time::date) as errors \
                from log where log.status != '200 OK' group by \
                time::date order by time::date desc" \
                + ")"
+# query to count rows with success status from log table
 success_query = "(" \
                 + "SELECT time::date, count(time::date) as success \
                 from log where log.status = '200 OK' group by \
                 time::date order by time::date desc" \
                 + ")"
+# joining errors and success new tables
 errors_success_query = "(" + "SELECT log_success.time::date, log_success.success,\
                        log_errors.errors from " \
                        + success_query \
@@ -32,13 +35,14 @@ errors_success_query = "(" + "SELECT log_success.time::date, log_success.success
                        + " as log_errors on log_success.time::date \
                        = log_errors.time::date order by log_success.time::date desc" \
                        + ")"
-
+# calculate the error rate in percent
 calc_query = "(" \
              + "SELECT time::date, (round((100 * ((1.0 * errors) / (1.0 * success))),2))\
               as error_rates from " \
              + errors_success_query \
              + "as status_summary" \
              + ")"
+# filtering out unnecessary information
 final_query = "SELECT * from " \
               + calc_query \
               + " as error_table where error_table.error_rates > 1.0;"
@@ -47,6 +51,7 @@ final_query = "SELECT * from " \
 cur.execute(final_query)
 results = cur.fetchall()
 
+# Print out the analysis result
 print("")
 print("days with more than 1% of error requests: ")
 
