@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import psycopg2
 import datetime
 
@@ -37,7 +38,7 @@ errors_success_query = "(" + "SELECT log_success.time::date, log_success.success
                        + ")"
 # calculate the error rate in percent
 calc_query = "(" \
-             + "SELECT time::date, (round((100 * ((1.0 * errors) / (1.0 * success))),2))\
+             + "SELECT time::date, (round((100 * ((1.0 * errors) / ((1.0 * success) + (1.0 * errors)) )),2))\
               as error_rates from " \
              + errors_success_query \
              + "as status_summary" \
