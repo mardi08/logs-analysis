@@ -28,7 +28,8 @@ success_query = "(" \
                 time::date order by time::date desc" \
                 + ")"
 # joining errors and success new tables
-errors_success_query = "(" + "SELECT log_success.time::date, log_success.success,\
+errors_success_query = "(" + \
+                       "SELECT log_success.time::date, log_success.success,\
                        log_errors.errors from " \
                        + success_query \
                        + " as log_success join " \
@@ -38,7 +39,8 @@ errors_success_query = "(" + "SELECT log_success.time::date, log_success.success
                        + ")"
 # calculate the error rate in percent
 calc_query = "(" \
-             + "SELECT time::date, (round((100 * ((1.0 * errors) / ((1.0 * success) + (1.0 * errors)) )),2))\
+             + "SELECT time::date, (round((100 * ((1.0 * errors) \
+             / ((1.0 * success) + (1.0 * errors)) )),2))\
               as error_rates from " \
              + errors_success_query \
              + "as status_summary" \
@@ -59,8 +61,10 @@ print("days with more than 1% of error requests: ")
 for rows in results:
     date_string = str(rows[0])
     datee = datetime.datetime.strptime(date_string, "%Y-%m-%d")
-    print(rows[0].strftime("%B") + " " + rows[0].strftime("%d")
-    + ", " + rows[0].strftime("%Y") + " -- " + str(rows[1]) + "% errors.")
+    print(
+        rows[0].strftime("%B") + " " + rows[0].strftime("%d")
+        + ", " + rows[0].strftime("%Y") + " -- " + str(rows[1]) + "% errors."
+        )
 
 print("")
 

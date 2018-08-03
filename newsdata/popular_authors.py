@@ -14,24 +14,21 @@ cur = db.cursor()
 '''
 Constructing sql queries
 '''
-# Getting the slug from the path
-path_substring = "reverse(split_part(reverse(path), '/', 1))"
-# query to get all informations from log table
-log_query = "(SELECT count(*) as num, " \
-    + path_substring \
-    + " as log_slug from log group by " \
-    + path_substring \
-    + " order by num desc)"
-# joining articles table with log table, only take matching slugs
-articles_log_query = "(articles join" \
-    + log_query \
-    + " as log_query on articles.slug = log_query.log_slug)"
-# joining authors table with log_articles table
-final_query = "SELECT name, sum(num) as views from authors join "\
-    + articles_log_query\
-    + " as log_articles on authors.id = log_articles.author \
-    group by authors.id;"
 
+final_query = """
+SELECT name,
+       sum(num) AS views
+FROM authors
+JOIN (articles
+      JOIN
+        (SELECT count(*) AS num,
+                reverse(split_part(reverse(PATH), '/', 1)) AS log_slug
+         FROM log
+         GROUP BY reverse(split_part(reverse(PATH), '/', 1))
+         ORDER BY num DESC) AS log_query ON articles.slug = log_query.log_slug)
+         AS log_articles ON authors.id = log_articles.author
+GROUP BY authors.id;
+"""
 # Getting all queries
 cur.execute(final_query)
 results = cur.fetchall()

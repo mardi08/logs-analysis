@@ -14,18 +14,18 @@ cur = db.cursor()
 '''
 Constructing sql queries
 '''
-# Getting the slug from the path
-path_substring = "reverse(split_part(reverse(path), '/', 1))"
-# query to get all informations from log table
-log_query = "(SELECT count(*) as num, " \
-    + path_substring \
-    + " as log_slug from log group by " \
-    + path_substring \
-    + " order by num desc)"
-# finalizing query and filter out unnecessary information
-final_query = "SELECT title, num from articles join" \
-    + log_query \
-    + " as log_query on articles.slug = log_query.log_slug"
+
+final_query = """
+SELECT title,
+       num
+FROM articles
+JOIN
+  (SELECT count(*) AS num,
+          reverse(split_part(reverse(PATH), '/', 1)) AS log_slug
+   FROM log
+   GROUP BY reverse(split_part(reverse(PATH), '/', 1))
+   ORDER BY num DESC) AS log_query ON articles.slug = log_query.log_slug
+"""
 
 # Getting all queries
 cur.execute(final_query)
