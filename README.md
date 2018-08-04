@@ -26,7 +26,7 @@ sql script is done in a single query. The query is structured by extracting new 
 ___
 You will need the following dependencies installed on your system to run the programs:
 - Python 2.7
-- PostgresSQL
+- PostgreSQL
 - psycopg2
 
 
